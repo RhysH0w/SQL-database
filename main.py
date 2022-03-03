@@ -62,6 +62,34 @@ def newUser():
     cursor.execute(insertData, [(username), (firstName), (surname), (password)])
     db.commit()
 
+def menu():
+    while True:
+        print("welcome to the database")
+        menu = ('''
+        1 - Create New User
+        2 - Login
+        3 - Exit
+        - ''')
+
+        userChoise = input(menu)
+
+        if userChoise == "1":
+            newUser()
+
+        elif userChoise == "2":
+
+          enter = login()
+          if enter == "exit":
+            break
+
+        elif userChoise == "3":
+            print("Goodbye")
+            time.sleep(1)
+            break
+
+        else:
+            print("input not recognized")
+
 
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS user(
@@ -78,4 +106,4 @@ cursor.execute("SELECT * FROM user")
 
 print(cursor.fetchall())
 
-newUser()
+menu()

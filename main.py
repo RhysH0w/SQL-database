@@ -1,6 +1,7 @@
-import sqlite3
+import sqlite3 as lite
+import time
 
-with sqlite3.connect("Quiz.db") as db:
+with lite.connect("Quiz.db") as db:
     cursor = db.cursor()
 
 
@@ -9,9 +10,58 @@ def login():
         username = input("Enter your username: ")
         password = input("Enter your password: ")
 
-find_user = ('SELECT * FROM users WHERE username = ? AND password = ?')
-cursor.execute(find_user, [(username), (password) ] )
-results = cursor.fetchall()
+        # with lite.connect("QuizScores.db") as db:
+        #     cursor = db.cursor()
+
+        find_user = ('SELECT * FROM user WHERE username = ? AND password = ?')
+        cursor.execute(find_user, [(username), (password)])
+        results = cursor.fetchall()
+
+        if results:
+            for i in results:
+                print("Welcome " + i[2])
+
+                return ("exit")
+
+        else:
+            print("username and password not recognized")
+            again = input("Do you want to try again (Y/N)")
+            if again.lower == "n":
+                print("Goodbye")
+                time.sleep(1)
+                return ("exit")
+
+def newUser():
+    print("Add a new user")
+    time.sleep(1)
+
+    found = 0
+    while found == 0:
+        username = input("Enter a username: ")
+        with lite.connect("Quiz.db") as db:
+            cursor  = db.cursor()
+        find_user = ('SELECT * FROM user WHERE username = ?')
+        cursor.execute(find_user, [ (username)])
+
+        if cursor.fetchall():
+            print("Username Taken")
+        else:
+            found = 1
+
+    firstName = input("Please enter your first name: ")
+    surname = input("Please enter your last name: ")
+    password = input("Please enter a password: ")
+    password2 = input("Please re-enter your password: ")
+    while password != password2:
+        print("Passwords did not match")
+        password = input("Please enter a password: ")
+        password2 = input("Please re-enter your password: ")
+
+    insertData = '''INSERT INTO user(username, firstname, surname, password)
+    VALUES(?, ?, ?, ?)'''
+    cursor.execute(insertData, [(username), (firstName), (surname), (password)])
+    db.commit()
+
 
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS user(
@@ -22,14 +72,10 @@ surname  VARCHAR(20) NOT NULL,
 password VARCHAR(20) NOT NULL);
 ''')
 
-cursor.execute("""
-INSERT INTO USER(username, firstname, surname, password)
-VALUES("test_User", "Bob", "Smith", "MrBob")
-""")
 db.commit()
 
+cursor.execute("SELECT * FROM user")
 
-def login():
-    while True:
-        username = input("Enter your username: ")
-        password = input("Enter your password: ")
+print(cursor.fetchall())
+
+newUser()

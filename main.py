@@ -10,8 +10,8 @@ def login():
         username = input("Enter your username: ")
         password = input("Enter your password: ")
 
-        # with lite.connect("QuizScores.db") as db:
-        #     cursor = db.cursor()
+        with lite.connect("Quiz.db") as db:
+            cursor = db.cursor()
 
         find_user = ('SELECT * FROM user WHERE username = ? AND password = ?')
         cursor.execute(find_user, [(username), (password)])

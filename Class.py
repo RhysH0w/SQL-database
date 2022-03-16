@@ -73,7 +73,7 @@ class Users:
                 for i in results:
                     print("Welcome " + i[2])
 
-                    return ("exit")
+                    return ("login")
 
             else:
                 print("username or password not recognized")
@@ -131,7 +131,14 @@ class Users:
                 while True:
 
                     enter = self.login
-                    if enter == "exit":
+
+                    if enter == 'login':
+
+                        enter = self.userMenu()
+                        if enter == "exit":
+                            break
+
+                    if enter == 'exit':
                         break
 
             elif userChoise == "3":
@@ -144,6 +151,24 @@ class Users:
 
             else:
                 print("input not recognized")
+
+    def userMenu(self):
+
+        while True:
+
+            menu = ('''
+            1 - Profile
+            2 - log out
+            - ''')
+
+            userChoice = input(menu)
+
+            if userChoice == '1':
+                return 'exit'
+
+            if userChoice == '2':
+                return 'exit'
+
 
 
 user = Users()

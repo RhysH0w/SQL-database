@@ -31,10 +31,21 @@ class Quiz:
         cursor.execute('SELECT topicName FROM topics')
         topics = cursor.fetchall()
 
-        print("What topic is your question in?")
+        while True:
 
-        for i in topics:
-            print(i[0])
+            print("What topic is your question in?")
+
+            for i in topics:
+                print(i[0])
+
+            hold = input("- ")
+            cursor.execute('SELECT topicName FROM topics WHERE topicName = ?', [hold])
+            results = cursor.fetchone()
+            if results and results[0] == hold:
+                print("hi")
+
+            else:
+                print("That is not a valid topic")
+
 
 quiz = Quiz()
-

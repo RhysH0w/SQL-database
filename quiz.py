@@ -47,5 +47,13 @@ class Quiz:
             else:
                 print("That is not a valid topic")
 
+    def NewQuestion(self):
+        with lite.connect("Quiz.db") as db:
+            cursor = db.cursor()
+
+        print("actually add a new question")
+
+        time.sleep(1)
+
 
 quiz = Quiz()

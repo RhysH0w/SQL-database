@@ -37,3 +37,11 @@ option4 VARCHAR(50),
 answer VARCHAR(50),
 FOREIGN KEY(topicID) REFERENCES topics(topicID));
 ''')
+
+
+tables = cursor.execute('''
+SELECT name FROM sqlite_master
+WHERE type = 'table'
+ORDER BY name;
+''')
+print(cursor.fetchall())

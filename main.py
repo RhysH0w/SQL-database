@@ -31,6 +31,7 @@ def login():
                 time.sleep(1)
                 return ("exit")
 
+
 def newUser():
     print("Add a new user")
     time.sleep(1)
@@ -39,9 +40,9 @@ def newUser():
     while found == 0:
         username = input("Enter a username: ")
         with lite.connect("Quiz.db") as db:
-            cursor  = db.cursor()
+            cursor = db.cursor()
         find_user = ('SELECT * FROM user WHERE username = ?')
-        cursor.execute(find_user, [ (username)])
+        cursor.execute(find_user, [(username)])
 
         if cursor.fetchall():
             print("Username Taken")
@@ -62,13 +63,26 @@ def newUser():
     cursor.execute(insertData, [(username), (firstName), (surname), (password)])
     db.commit()
 
+
+def displayDatabase():
+    with lite.connect("Quiz.db") as db:
+        cursor = db.cursor()
+
+    cursor.execute('SELECT userID, username, firstname, surname FROM user ORDER BY userID ASC')
+    results = cursor.fetchall()
+
+    for i in results:
+        print(i)
+
+
 def menu():
     while True:
         print("welcome to the database")
         menu = ('''
         1 - Create New User
         2 - Login
-        3 - Exit
+        3 - Display the database
+        4 - Exit
         - ''')
 
         userChoise = input(menu)
@@ -78,11 +92,14 @@ def menu():
 
         elif userChoise == "2":
 
-          enter = login()
-          if enter == "exit":
-            break
+            enter = login()
+            if enter == "exit":
+                break
 
         elif userChoise == "3":
+            displayDatabase()
+
+        elif userChoise == "4":
             print("Goodbye")
             time.sleep(1)
             break

@@ -20,9 +20,9 @@ class Quiz:
             userChoise = input(menu)
 
             if userChoise == '1':
-                enter = self.newQuestion()
+                enter = self.newQuestionTopic()
 
-    def newQuestion(self):
+    def newQuestionTopic(self):
         with lite.connect("Quiz.db") as db:
             cursor = db.cursor()
         print("Add new question")

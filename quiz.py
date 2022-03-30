@@ -38,11 +38,24 @@ class Quiz:
             for i in topics:
                 print(i[0])
 
-            hold = input("- ")
+            hold = input("New topic (1)\n"
+                         "- ")
             cursor.execute('SELECT topicName FROM topics WHERE topicName = ?', [hold])
             results = cursor.fetchone()
-            if results and results[0] == hold:
-                print("hi")
+            if hold == '1':
+                newTopic = input("What is the new topic name?")
+
+                self.topic = newTopic
+
+                insertData = '''INSERT INTO topics(topicName)
+                    VALUES(?)'''
+                cursor.execute(insertData, [(newTopic)])
+                db.commit()
+
+                temp = Quiz.NewQuestion(())
+
+            elif results and results[0] == hold:
+                temp = Quiz.NewQuestion()
 
             else:
                 print("That is not a valid topic")

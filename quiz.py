@@ -5,6 +5,10 @@ import time
 class Quiz:
     def __init__(self):
         self.conn = lite.connect('Quiz.db')
+        self.answer1 = None
+        self.answer2 = None
+        self.answer3 = None
+        self.answer4 = None
         self.menu()
 
     def menu(self):
@@ -20,7 +24,13 @@ class Quiz:
             userChoise = input(menu)
 
             if userChoise == '1':
-                enter = self.newQuestionTopic()
+                check = self.adminCheck()
+                if check == 'login':
+                    enter = self.newQuestionTopic()
+
+
+                elif check == 'fail':
+                    break
 
     def newQuestionTopic(self):
         with lite.connect("Quiz.db") as db:
@@ -52,10 +62,16 @@ class Quiz:
                 cursor.execute(insertData, [(newTopic)])
                 db.commit()
 
-                temp = Quiz.NewQuestion(())
+                temp = self.NewQuestion(())
+                if temp == 'done':
+                    break
 
             elif results and results[0] == hold:
-                temp = Quiz.NewQuestion()
+                self.topic = 'hold'
+                temp = self.NewQuestion()
+                if temp == 'done':
+                    temp = self.addQuestion()
+                    break
 
             else:
                 print("That is not a valid topic")
@@ -67,6 +83,50 @@ class Quiz:
         print("actually add a new question")
 
         time.sleep(1)
+        while True:
+            self.question = input("What is the question?")
+            while True:
+                hold = input("from 2-4, how many possible answers are there")
+                if hold !='2' and hold != '3' and hold !='4':
+                    print("That is not a valid value")
+                else:
+                    self.answer1 = input("What is the first answer")
+                    self.answer2 = input("What is the second answer")
+
+                    if hold == '3':
+                        self.answer3 = input("What is the third answer?")
+
+                    elif hold == '4':
+                        self.answer3 = input("What is the third answer?")
+                        self.answer4 = input("What is the fourth answer")
+
+                    self.trueAnswer = input("What is the correct answer?")
+                    return 'done'
+        return 'done'
+
+    def adminCheck(self):
+
+        if input("Please confirm you are an admin") == 'yup':
+            return 'login'
+        else:
+            print('you are not an admin')
+            return 'fail'
+    def addQuestion(self):
+        with lite.connect("Quiz.db") as db:
+            cursor = db.cursor()
+        findTopic = ('''
+        SELECT topicID
+        FROM topics
+        WHERE topics.topicID == questions.topicID
+        AND topicName = ?''')
+        cursor.execute(findTopic, [(self.topic)])
+        topicID = cursor.fetchall()
+
+        insertData = '''
+        INSERT INTO questions(topicID, question, option1, option2, option3, option4, answer)
+        VALUES(?, ?, ?, ?, ?, ?, ?)'''
+        cursor.execute(insertData, [(topicID), (self.question), (self.answer1), (self.answer2), (self.answer3), (self.answer4), (self.trueAnswer)])
+        db.commit()
 
 
 quiz = Quiz()
